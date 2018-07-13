@@ -1,6 +1,6 @@
 function init(self)
 	msg.post("@system:", "toggle_profile")
-	
+	msg.post(".", "acquire_input_focus")
 end
 
 function final(self)
@@ -19,8 +19,9 @@ function on_message(self, message_id, message, sender)
 end
 
 function on_input(self, action_id, action)
-	-- Add input-handling code here
-	-- Remove this function if not needed
+	if action.released then
+		msg.post("@system:", "toggle_profile")
+	end
 end
 
 function on_reload(self)

@@ -1,7 +1,7 @@
-go.property("avatar_width", 128)
-go.property("avatar_height", 128)
-go.property("tilesource_width", 1024)
-go.property("tilesource_height", 1024)
+go.property("avatar_width", 100)
+go.property("avatar_height", 100)
+go.property("tilesource_width", 256)
+go.property("tilesource_height", 256)
 
 local function do_image(self, id)
 	self.height = self.tilesource_height
@@ -13,8 +13,8 @@ local function do_image(self, id)
 	pprint(self.images)
 	self.source_stream = buffer.get_stream(self.images[id].data, hash("pixels"))
 
-	y_offset = 0
-	x_offset = (id - 1) * self.avatar_width
+	y_offset = (self.tilesource_height - self.avatar_height) - ((math.floor((id - 1)/2)) * self.avatar_height)
+	x_offset = (math.fmod(id - 1, 2)) * self.avatar_width
 
 	for y = 0, self.avatar_width - 1 do
 		for x = 0, self.avatar_width - 1 do
@@ -26,29 +26,6 @@ local function do_image(self, id)
 		end
 	end
 
-	--[[
-	for y=1, self.avatar_width do
-		for x=1, self.avatar_height do
-			local index = ((y-1) * (self.tilesource_width) * 3 + (x-1) * 3 + 1)
-			self.stream[(index + 0)] = 0xff
-			self.stream[(index + 1)] = 0x80
-			self.stream[(index + 2)] = 0x10
-		end
-	end
-	--]]
-
-	--[[
-	local xstart = 1
-	local ystart = 1
-	for y=ystart, self.avatar_width do
-		for x=xstart, self.avatar_height do
-			local index = ((ystart-1) * self.avatar_width + (xstart-1)) * 3
-			self.stream[(index + 0) * self.tilesource_width] = 0xff
-			self.stream[(index + 1) * self.tilesource_width] = 0x80
-			self.stream[(index + 2) * self.tilesource_width] = 0x10
-		end
-	end	
-	--]]
 
 	self.resource_path = go.get("#sprite", "texture0")
 	self.header = { width=self.width, height=self.height, type=resource.TEXTURE_TYPE_2D, format=resource.TEXTURE_FORMAT_RGB, num_mip_maps=1 }
@@ -76,8 +53,10 @@ end
 function init(self)
 	self.images = {}
 	
-	download_image(self, "https://i.imgur.com/Y8JhMoR.png", do_image, 1)
-	download_image(self, "https://i.imgur.com/iMPi3lq.png", do_image, 2)
+	download_image(self, "https://i.imgur.com/cq6tcIF.png", do_image, 1)
+	download_image(self, "https://i.imgur.com/tYxq0fL.png", do_image, 2)
+	download_image(self, "https://i.imgur.com/j2VGVzG.png", do_image, 3)
+	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 4)
 	
 	msg.post("#sprite", "disable")
 
