@@ -21,10 +21,12 @@ local function do_image(self, id)
 	y_offset = (self.atlas_height - self.avatar_height) - ((math.floor((id - 1)/self.dimensions.x)) * self.avatar_height)
 	x_offset = (math.fmod(id - 1, self.dimensions.x)) * self.avatar_width
 
+
+	
 	for y = 0, self.avatar_width - 1 do
 		for x = 0, self.avatar_width - 1 do
 			-- images are incorrectly flipped horizontally atm
-			local index = ((y + y_offset) * self.atlas_width + (x + x_offset)) * 3 +1 
+			local index = (((y) + y_offset) * self.atlas_width + (x + x_offset)) * 3 +1 
 			local index2 = ((y) * self.avatar_width + (x)) * 3 +1
 			--print(index2)
 			self.stream[(index + 0)] = string.byte(self.images[id].data, index2 + 0 )
@@ -33,11 +35,27 @@ local function do_image(self, id)
 		end
 	end
 
-
 	self.resource_path = go.get("#sprite", "texture0")
 	self.header = { width=self.width, height=self.height, type=resource.TEXTURE_TYPE_2D, format=resource.TEXTURE_FORMAT_RGB, num_mip_maps=1 }
 	resource.set_texture( self.resource_path, self.header, self.buffer )
 	self.images[id].status = true
+end
+
+local function flip_image(image)
+
+	local width = image.width
+	local height = image.height
+
+	local temp_buffer = ""
+	local width_chunk = width * 3
+
+	for i=1, height do
+		local start = (i - 1) * width_chunk + 1
+		local stop = start + width_chunk - 1
+		temp_buffer = string.sub(image.buffer, start, stop) .. temp_buffer
+	end
+
+	return temp_buffer
 end
 
 local function download_image(self, image_url, callback, id, expected_width, expected_height)
@@ -51,7 +69,7 @@ local function download_image(self, image_url, callback, id, expected_width, exp
 		self.images[id].type = image.type
 		self.images[id].width = image.width
 		self.images[id].height = image.height
-		self.images[id].data = image.buffer
+		self.images[id].data = flip_image(image)
 		
 		callback(self, id)
 	else
@@ -69,7 +87,7 @@ local function download_image(self, image_url, callback, id, expected_width, exp
 				self.images[id].type = image.type
 				self.images[id].width = image.width
 				self.images[id].height = image.height
-				self.images[id].data = image.buffer
+				self.images[id].data = flip_image(image)
 				
 				callback(self, id)
 			else
