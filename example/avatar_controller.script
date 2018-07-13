@@ -25,10 +25,10 @@ local function do_image(self, id)
 	
 	for y = 0, self.avatar_width - 1 do
 		for x = 0, self.avatar_width - 1 do
-			-- images are incorrectly flipped horizontally atm
+			
 			local index = (((y) + y_offset) * self.atlas_width + (x + x_offset)) * 3 +1 
 			local index2 = ((y) * self.avatar_width + (x)) * 3 +1
-			--print(index2)
+			
 			self.stream[(index + 0)] = string.byte(self.images[id].data, index2 + 0 )
 			self.stream[(index + 1)] = string.byte(self.images[id].data, index2 + 1 )
 			self.stream[(index + 2)] = string.byte(self.images[id].data, index2 + 2 )
@@ -59,9 +59,8 @@ local function flip_image(image)
 end
 
 local function download_image(self, image_url, callback, id, expected_width, expected_height)
-	-- should add image caching based on url
 	if image_cache[image_url] ~= nil then
-		-- doesn't work atm if same image is loaded within same period too quickly
+		-- cache is skipped if same image is downloaded within same period too quickly
 		print("Cached!")
 		local image = image.load(image_cache[image_url], true)
 
@@ -125,7 +124,6 @@ function final(self)
 end
 
 function update(self, dt)
-	--pprint(image_cache)
 
 	if self.timer <= 3 and self.timer ~= -1 then
 		self.timer = self.timer + dt
@@ -136,7 +134,7 @@ function update(self, dt)
 		
 		end
 	end
-	--resource.set_texture( self.resource_path, self.header, self.buffer )
+
 end
 
 function on_message(self, message_id, message, sender)
