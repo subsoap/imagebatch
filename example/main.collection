@@ -70,7 +70,7 @@ embedded_instances {
   "embedded_components {\n"
   "  id: \"sprite\"\n"
   "  type: \"sprite\"\n"
-  "  data: \"tile_set: \\\"/example/assets/100_x4.tilesource\\\"\\n"
+  "  data: \"tile_set: \\\"/example/assets/size100_10x10.tilesource\\\"\\n"
   "default_animation: \\\"1\\\"\\n"
   "material: \\\"/builtins/materials/sprite.material\\\"\\n"
   "blend_mode: BLEND_MODE_ALPHA\\n"

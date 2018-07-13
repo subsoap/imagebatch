@@ -1,7 +1,7 @@
 script: ""
 textures {
   name: "100_x4"
-  texture: "/example/assets/100_x4.tilesource"
+  texture: "/example/assets/size100_10x10.tilesource"
 }
 background_color {
   x: 0.0

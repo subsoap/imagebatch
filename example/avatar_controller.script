@@ -1,11 +1,15 @@
 go.property("avatar_width", 100)
 go.property("avatar_height", 100)
-go.property("tilesource_width", 256)
-go.property("tilesource_height", 256)
+go.property("tilesource_width", 1000)
+go.property("tilesource_height", 1000)
+go.property("atlas_width", 1024)
+go.property("atlas_height", 1024)
 
 local function do_image(self, id)
-	self.height = self.tilesource_height
-	self.width = self.tilesource_width
+	self.dimensions = {x = self.tilesource_width / self.avatar_width, y = self.tilesource_height / self.avatar_height}
+	
+	self.height = self.atlas_height
+	self.width = self.atlas_width
 	if self.buffer == nil then
 		self.buffer = buffer.create(self.width * self.height, { {name=hash("rgb"), type=buffer.VALUE_TYPE_UINT8, count=3} } )
 	end
@@ -13,12 +17,12 @@ local function do_image(self, id)
 	pprint(self.images)
 	self.source_stream = buffer.get_stream(self.images[id].data, hash("pixels"))
 
-	y_offset = (self.tilesource_height - self.avatar_height) - ((math.floor((id - 1)/2)) * self.avatar_height)
-	x_offset = (math.fmod(id - 1, 2)) * self.avatar_width
+	y_offset = (self.atlas_height - self.avatar_height) - ((math.floor((id - 1)/self.dimensions.x)) * self.avatar_height)
+	x_offset = (math.fmod(id - 1, self.dimensions.x)) * self.avatar_width
 
 	for y = 0, self.avatar_width - 1 do
 		for x = 0, self.avatar_width - 1 do
-			local index = ((y + y_offset) * self.tilesource_width + (x + x_offset)) * 3 +1 
+			local index = ((y + y_offset) * self.atlas_width + (x + x_offset)) * 3 +1 
 			local index2 = ((y) * self.avatar_width + (x)) * 3 +1
 			self.stream[(index + 0)] = self.source_stream[(index2 + 0)]
 			self.stream[(index + 1)] = self.source_stream[(index2 + 1)]
@@ -34,7 +38,7 @@ local function do_image(self, id)
 end
 
 local function download_image(self, image_url, callback, id, expected_width, expected_height)
-	http.request(image_url, "GET", function(self, error, res)
+	http.request(image_url, "GET", function(self, _, res)
 		if (res.status == 200 or res.status == 302 or res.status == 304) then
 			--pprint(res)
 			local buf, w, h = png.decode_rgb(res.response, true)
@@ -43,7 +47,12 @@ local function download_image(self, image_url, callback, id, expected_width, exp
 			self.images[id] = {}
 			self.images[id].data = buf
 			callback(self, id)
+		else
+			print("Something went wrong!")
+			-- should add a retry queue here
+			pprint(res)
 		end
+		
 	end)
 	
 end
