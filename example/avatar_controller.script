@@ -14,19 +14,18 @@ local function do_image(self, id)
 		self.buffer = buffer.create(self.width * self.height, { {name=hash("rgb"), type=buffer.VALUE_TYPE_UINT8, count=3} } )
 	end
 	self.stream = buffer.get_stream(self.buffer, hash("rgb"))
-	pprint(self.images)
-	self.source_stream = buffer.get_stream(self.images[id].data, hash("pixels"))
 
 	y_offset = (self.atlas_height - self.avatar_height) - ((math.floor((id - 1)/self.dimensions.x)) * self.avatar_height)
 	x_offset = (math.fmod(id - 1, self.dimensions.x)) * self.avatar_width
 
 	for y = 0, self.avatar_width - 1 do
 		for x = 0, self.avatar_width - 1 do
+			-- images are incorrectly flipped horizontally atm
 			local index = ((y + y_offset) * self.atlas_width + (x + x_offset)) * 3 +1 
 			local index2 = ((y) * self.avatar_width + (x)) * 3 +1
-			self.stream[(index + 0)] = self.source_stream[(index2 + 0)]
-			self.stream[(index + 1)] = self.source_stream[(index2 + 1)]
-			self.stream[(index + 2)] = self.source_stream[(index2 + 2)]
+			self.stream[(index + 0)] = string.byte(self.images[id].data, index2 + 0 )
+			self.stream[(index + 1)] = string.byte(self.images[id].data, index2 + 1 )
+			self.stream[(index + 2)] = string.byte(self.images[id].data, index2 + 2 )
 		end
 	end
 
@@ -38,14 +37,21 @@ local function do_image(self, id)
 end
 
 local function download_image(self, image_url, callback, id, expected_width, expected_height)
+	-- should add image caching based on url
 	http.request(image_url, "GET", function(self, _, res)
 		if (res.status == 200 or res.status == 302 or res.status == 304) then
-			--pprint(res)
-			local buf, w, h = png.decode_rgb(res.response, true)
-			if expected_width ~= w or expected_height ~= h then
+
+			local image = image.load(res.response, true)
+
+			if expected_width ~= image.width or expected_height ~= image.height then
 			end
+			
 			self.images[id] = {}
-			self.images[id].data = buf
+			self.images[id].type = image.type
+			self.images[id].width = image.width
+			self.images[id].height = image.height
+			self.images[id].data = image.buffer
+			
 			callback(self, id)
 		else
 			print("Something went wrong!")
@@ -66,6 +72,8 @@ function init(self)
 	download_image(self, "https://i.imgur.com/tYxq0fL.png", do_image, 2)
 	download_image(self, "https://i.imgur.com/j2VGVzG.png", do_image, 3)
 	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 4)
+	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 5)
+	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 6)
 	
 	msg.post("#sprite", "disable")
 

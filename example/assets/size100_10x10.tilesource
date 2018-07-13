@@ -41,5 +41,23 @@ animations {
   flip_horizontal: 0
   flip_vertical: 0
 }
+animations {
+  id: "5"
+  start_tile: 5
+  end_tile: 5
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
+animations {
+  id: "6"
+  start_tile: 6
+  end_tile: 6
+  playback: PLAYBACK_ONCE_FORWARD
+  fps: 30
+  flip_horizontal: 0
+  flip_vertical: 0
+}
 extrude_borders: 0
 inner_padding: 0
