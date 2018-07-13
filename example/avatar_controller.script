@@ -5,6 +5,9 @@ go.property("tilesource_height", 1000)
 go.property("atlas_width", 1024)
 go.property("atlas_height", 1024)
 
+-- this will be moved to a lua module soon
+local image_cache = {}
+
 local function do_image(self, id)
 	self.dimensions = {x = self.tilesource_width / self.avatar_width, y = self.tilesource_height / self.avatar_height}
 	
@@ -39,28 +42,44 @@ end
 
 local function download_image(self, image_url, callback, id, expected_width, expected_height)
 	-- should add image caching based on url
-	http.request(image_url, "GET", function(self, _, res)
-		if (res.status == 200 or res.status == 302 or res.status == 304) then
+	if image_cache[image_url] ~= nil then
+		-- doesn't work atm if same image is loaded within same period too quickly
+		print("Cached!")
+		local image = image.load(image_cache[image_url], true)
 
-			local image = image.load(res.response, true)
+		self.images[id] = {}
+		self.images[id].type = image.type
+		self.images[id].width = image.width
+		self.images[id].height = image.height
+		self.images[id].data = image.buffer
+		
+		callback(self, id)
+	else
+		http.request(image_url, "GET", function(self, _, res)
+			if (res.status == 200 or res.status == 302 or res.status == 304) then
 
-			if expected_width ~= image.width or expected_height ~= image.height then
+				local image = image.load(res.response, true)
+
+				if expected_width ~= image.width or expected_height ~= image.height then
+				end
+
+				image_cache[image_url] = res.response
+				
+				self.images[id] = {}
+				self.images[id].type = image.type
+				self.images[id].width = image.width
+				self.images[id].height = image.height
+				self.images[id].data = image.buffer
+				
+				callback(self, id)
+			else
+				print("Something went wrong!")
+				-- should add a retry queue here
+				pprint(res)
 			end
 			
-			self.images[id] = {}
-			self.images[id].type = image.type
-			self.images[id].width = image.width
-			self.images[id].height = image.height
-			self.images[id].data = image.buffer
-			
-			callback(self, id)
-		else
-			print("Something went wrong!")
-			-- should add a retry queue here
-			pprint(res)
-		end
-		
-	end)
+		end)
+	end
 	
 end
 
@@ -78,6 +97,7 @@ function init(self)
 	
 	msg.post("#sprite", "disable")
 
+	self.timer = 0
 
 end
 
@@ -87,7 +107,17 @@ function final(self)
 end
 
 function update(self, dt)
+	--pprint(image_cache)
 
+	if self.timer <= 3 and self.timer ~= -1 then
+		self.timer = self.timer + dt
+		if self.timer > 3 then
+			self.timer = -1
+			print("ok")
+			download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 6)
+		
+		end
+	end
 	--resource.set_texture( self.resource_path, self.header, self.buffer )
 end
 
