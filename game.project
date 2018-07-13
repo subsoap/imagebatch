@@ -6,7 +6,7 @@ shared_state = 1
 
 [project]
 title = ImageBatch
-dependencies = https://github.com/britzl/defold-png/archive/master.zip
+dependencies = 
 
 [library]
 include_dirs = imagebatch
