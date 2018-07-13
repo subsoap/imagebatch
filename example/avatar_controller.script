@@ -23,6 +23,7 @@ local function do_image(self, id)
 			-- images are incorrectly flipped horizontally atm
 			local index = ((y + y_offset) * self.atlas_width + (x + x_offset)) * 3 +1 
 			local index2 = ((y) * self.avatar_width + (x)) * 3 +1
+			--print(index2)
 			self.stream[(index + 0)] = string.byte(self.images[id].data, index2 + 0 )
 			self.stream[(index + 1)] = string.byte(self.images[id].data, index2 + 1 )
 			self.stream[(index + 2)] = string.byte(self.images[id].data, index2 + 2 )
@@ -68,7 +69,7 @@ end
 function init(self)
 	self.images = {}
 	
-	download_image(self, "https://i.imgur.com/cq6tcIF.png", do_image, 1)
+	download_image(self, "https://i.imgur.com/r0vFSFN.jpg", do_image, 1)
 	download_image(self, "https://i.imgur.com/tYxq0fL.png", do_image, 2)
 	download_image(self, "https://i.imgur.com/j2VGVzG.png", do_image, 3)
 	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 4)
