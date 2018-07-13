@@ -10,4 +10,4 @@ Download images and put them into a single texture to reduce drawcalls in Defold
 - Image caching is forced right now (will be an option later)
 - You can take the code out and use if how you want
 - Edge extrusion support will be added later
-
+- More other features will be added later
