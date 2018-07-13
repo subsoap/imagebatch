@@ -1,5 +1,5 @@
-go.property("avatar_width", 100)
-go.property("avatar_height", 100)
+go.property("image_width", 100)
+go.property("image_height", 100)
 go.property("tilesource_width", 1000)
 go.property("tilesource_height", 1000)
 go.property("atlas_width", 1024)
@@ -9,7 +9,7 @@ go.property("atlas_height", 1024)
 local image_cache = {}
 
 local function do_image(self, id)
-	self.dimensions = {x = self.tilesource_width / self.avatar_width, y = self.tilesource_height / self.avatar_height}
+	self.dimensions = {x = self.tilesource_width / self.image_width, y = self.tilesource_height / self.image_height}
 	
 	self.height = self.atlas_height
 	self.width = self.atlas_width
@@ -18,16 +18,16 @@ local function do_image(self, id)
 	end
 	self.stream = buffer.get_stream(self.buffer, hash("rgb"))
 
-	y_offset = (self.atlas_height - self.avatar_height) - ((math.floor((id - 1)/self.dimensions.x)) * self.avatar_height)
-	x_offset = (math.fmod(id - 1, self.dimensions.x)) * self.avatar_width
+	y_offset = (self.atlas_height - self.image_height) - ((math.floor((id - 1)/self.dimensions.x)) * self.image_height)
+	x_offset = (math.fmod(id - 1, self.dimensions.x)) * self.image_width
 
 
 	
-	for y = 0, self.avatar_width - 1 do
-		for x = 0, self.avatar_width - 1 do
+	for y = 0, self.image_width - 1 do
+		for x = 0, self.image_width - 1 do
 			
 			local index = (((y) + y_offset) * self.atlas_width + (x + x_offset)) * 3 +1 
-			local index2 = ((y) * self.avatar_width + (x)) * 3 +1
+			local index2 = ((y) * self.image_width + (x)) * 3 +1
 			
 			self.stream[(index + 0)] = string.byte(self.images[id].data, index2 + 0 )
 			self.stream[(index + 1)] = string.byte(self.images[id].data, index2 + 1 )

@@ -54,7 +54,7 @@ embedded_instances {
   id: "avatar_controller"
   data: "components {\n"
   "  id: \"avatar_controller\"\n"
-  "  component: \"/example/avatar_controller.script\"\n"
+  "  component: \"/imagebatch/image_controller.script\"\n"
   "  position {\n"
   "    x: 0.0\n"
   "    y: 0.0\n"
