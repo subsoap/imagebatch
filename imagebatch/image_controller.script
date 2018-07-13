@@ -129,17 +129,16 @@ function update(self, dt)
 		self.timer = self.timer + dt
 		if self.timer > 3 then
 			self.timer = -1
-			print("ok")
-			download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 6)
-		
+			msg.post(".", "set_image", {url = "https://i.imgur.com/zdyfMQB.png", slot_id = 6})
 		end
 	end
 
 end
 
 function on_message(self, message_id, message, sender)
-	-- Add message-handling code here
-	-- Remove this function if not needed
+	if message_id == hash("set_image") then
+		download_image(self, message.url, do_image, message.slot_id)
+	end
 end
 
 function on_input(self, action_id, action)
