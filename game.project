@@ -1,0 +1,16 @@
+[bootstrap]
+main_collection = /example/main.collectionc
+
+[script]
+shared_state = 1
+
+[project]
+title = ImageBatch
+dependencies = https://github.com/britzl/defold-png/archive/master.zip
+
+[library]
+include_dirs = imagebatch
+
+[input]
+game_binding = /example/input/game.input_bindingc
+

@@ -1,0 +1,39 @@
+images {
+  image: "/example/assets/cat_1.png"
+}
+images {
+  image: "/example/assets/cat_10.png"
+}
+images {
+  image: "/example/assets/cat_11.png"
+}
+images {
+  image: "/example/assets/cat_12.png"
+}
+images {
+  image: "/example/assets/cat_2.png"
+}
+images {
+  image: "/example/assets/cat_3.png"
+}
+images {
+  image: "/example/assets/cat_4.png"
+}
+images {
+  image: "/example/assets/cat_5.png"
+}
+images {
+  image: "/example/assets/cat_6.png"
+}
+images {
+  image: "/example/assets/cat_7.png"
+}
+images {
+  image: "/example/assets/cat_8.png"
+}
+images {
+  image: "/example/assets/cat_9.png"
+}
+margin: 0
+extrude_borders: 0
+inner_padding: 0
