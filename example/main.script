@@ -1,6 +1,24 @@
 function init(self)
 	msg.post("@system:", "toggle_profile")
 	msg.post(".", "acquire_input_focus")
+
+	msg.post("/image_controller#image_controller", "set_image", {url = "https://i.imgur.com/r0vFSFN.jpg", slot_id = 1})
+	msg.post("/image_controller#image_controller", "set_image", {url = "https://i.imgur.com/tYxq0fL.png", slot_id = 2})
+	msg.post("/image_controller#image_controller", "set_image", {url = "https://i.imgur.com/j2VGVzG.png", slot_id = 3})
+	msg.post("/image_controller#image_controller", "set_image", {url = "https://i.imgur.com/zdyfMQB.png", slot_id = 4})
+	msg.post("/image_controller#image_controller", "set_image", {url = "https://i.imgur.com/zdyfMQB.png", slot_id = 5})
+	msg.post("/image_controller#image_controller", "set_image", {url = "https://i.imgur.com/zdyfMQB.png", slot_id = 6})
+
+	self.timer = 0
+
+	--[[
+	download_image(self, "https://i.imgur.com/r0vFSFN.jpg", do_image, 1)
+	download_image(self, "https://i.imgur.com/tYxq0fL.png", do_image, 2)
+	download_image(self, "https://i.imgur.com/j2VGVzG.png", do_image, 3)
+	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 4)
+	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 5)
+	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 6)
+	--]]
 end
 
 function final(self)
@@ -9,8 +27,14 @@ function final(self)
 end
 
 function update(self, dt)
-	-- Add update code here
-	-- Remove this function if not needed
+	if self.timer <= 3 and self.timer ~= -1 then
+		self.timer = self.timer + dt
+		if self.timer > 3 then
+			self.timer = -1
+			msg.post("/image_controller#image_controller", "set_image", {url = "https://i.imgur.com/zdyfMQB.png", slot_id = 6})
+		end
+	end
+	
 end
 
 function on_message(self, message_id, message, sender)

@@ -20,8 +20,6 @@ local function do_image(self, id)
 
 	y_offset = (self.atlas_height - self.image_height) - ((math.floor((id - 1)/self.dimensions.x)) * self.image_height)
 	x_offset = (math.fmod(id - 1, self.dimensions.x)) * self.image_width
-
-
 	
 	for y = 0, self.image_width - 1 do
 		for x = 0, self.image_width - 1 do
@@ -61,7 +59,7 @@ end
 local function download_image(self, image_url, callback, id, expected_width, expected_height)
 	if image_cache[image_url] ~= nil then
 		-- cache is skipped if same image is downloaded within same period too quickly
-		print("Cached!")
+		--print("Cached!")
 		local image = image.load(image_cache[image_url], true)
 
 		self.images[id] = {}
@@ -104,18 +102,7 @@ end
 
 function init(self)
 	self.images = {}
-	
-	download_image(self, "https://i.imgur.com/r0vFSFN.jpg", do_image, 1)
-	download_image(self, "https://i.imgur.com/tYxq0fL.png", do_image, 2)
-	download_image(self, "https://i.imgur.com/j2VGVzG.png", do_image, 3)
-	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 4)
-	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 5)
-	download_image(self, "https://i.imgur.com/zdyfMQB.png", do_image, 6)
-	
 	msg.post("#sprite", "disable")
-
-	self.timer = 0
-
 end
 
 function final(self)
@@ -125,13 +112,6 @@ end
 
 function update(self, dt)
 
-	if self.timer <= 3 and self.timer ~= -1 then
-		self.timer = self.timer + dt
-		if self.timer > 3 then
-			self.timer = -1
-			msg.post(".", "set_image", {url = "https://i.imgur.com/zdyfMQB.png", slot_id = 6})
-		end
-	end
 
 end
 
